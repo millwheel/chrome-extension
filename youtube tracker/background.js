@@ -1,19 +1,19 @@
-let startTime = null; // Track when the user starts visiting YouTube
-let timer = null; // Reference to the interval timer
-const TIME_LIMIT = 60 * 1000; // 1 minute in milliseconds
+let startTime = null;
+let timer = null;
+const TIME_LIMIT = 60 * 1000;
+let activeYouTubeTabId = null;
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (isYouTube(changeInfo.url)) {
-    console.log("YouTube detected!");
-    handleYouTubeStart();
-  } else {
+  if (changeInfo.url && changeInfo.url.includes("youtube.com")) {
+    if (activeYouTubeTabId !== tabId) {
+      console.log("YouTube detected!");
+      handleYouTubeStart(tabId);
+    }
+  } else if (activeYouTubeTabId === tabId) {
+    console.log("Left YouTube, stopping timer.");
     handleYouTubeExit();
   }
 });
-
-function isYouTube(url) {
-  return url && url.includes("youtube.com");
-}
 
 function handleYouTubeStart() {
   if (!startTime) {
