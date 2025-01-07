@@ -5,16 +5,22 @@ let activeYouTubeTabId = null;
 let notificationsSent = [];
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.url && changeInfo.url.includes("youtube.com")) {
-    if (activeYouTubeTabId !== tabId) {
-      handleYouTubeStart(tabId);
+  if (changeInfo.url) {
+    if (isYouTube(changeInfo.url)) {
+      if (activeYouTubeTabId !== tabId) {
+        handleYouTubeTimeTrackerStart(tabId);
+      }
+    } else if (activeYouTubeTabId === tabId) {
+      handleYouTubeTimeTrackerExit();
     }
-  } else if (activeYouTubeTabId === tabId) {
-    handleYouTubeExit();
   }
 });
 
-function handleYouTubeStart(tabId) {
+function isYouTube(url) {
+  return url.includes("youtube.com");
+}
+
+function handleYouTubeTimeTrackerStart(tabId) {
   if (!startTime) {
     activeYouTubeTabId = tabId;
     startTime = Date.now();
@@ -24,7 +30,7 @@ function handleYouTubeStart(tabId) {
   }
 }
 
-function handleYouTubeExit() {
+function handleYouTubeTimeTrackerExit() {
   if (startTime) {
     stopYouTubeTimer();
     activeYouTubeTabId = null;
@@ -45,7 +51,7 @@ function startYouTubeTimer() {
     }
 
     if (notificationsSent.length === TIME_LIMITS.length) {
-      console.log("All notifications sent. Stopping timer.");
+      console.log("All notifications sent.");
       stopYouTubeTimer();
     }
 
@@ -53,6 +59,7 @@ function startYouTubeTimer() {
 }
 
 function stopYouTubeTimer() {
+  console.log("Stopping timer.");
   clearInterval(timer);
   timer = null;
 }
