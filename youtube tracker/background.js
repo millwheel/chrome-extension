@@ -9,7 +9,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (visitCount >= VISIT_LIMIT) {
       chrome.notifications.create({
         type: "basic",
-        iconUrl: "https://www.quanta.org/orange/orange.jpg"
+        iconUrl: "orange.jpeg",
         title: "YouTube Warning",
         message: `You have visited YouTube ${visitCount} times!`,
         priority: 2,
