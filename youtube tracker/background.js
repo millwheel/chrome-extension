@@ -6,11 +6,9 @@ let activeYouTubeTabId = null;
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.url && changeInfo.url.includes("youtube.com")) {
     if (activeYouTubeTabId !== tabId) {
-      console.log("YouTube detected!");
       handleYouTubeStart(tabId);
     }
   } else if (activeYouTubeTabId === tabId) {
-    console.log("Left YouTube, stopping timer.");
     handleYouTubeExit();
   }
 });
@@ -50,7 +48,7 @@ function stopYouTubeTimer() {
 function sendNotification() {
   chrome.notifications.create({
     type: "basic",
-    iconUrl: "orange.jpeg",
+    iconUrl: "warning.png",
     title: "YouTube Warning",
     message: `You have spent 1 minute on YouTube!`,
     priority: 1,
