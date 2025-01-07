@@ -6,7 +6,7 @@ let notificationsSent = [];
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.url) {
-    if (isYouTube(changeInfo.url)) {
+    if (isYouTubeUrl(changeInfo.url)) {
       if (activeYouTubeTabId !== tabId) {
         handleYouTubeTimeTrackerStart(tabId);
       }
@@ -16,7 +16,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   }
 });
 
-function isYouTube(url) {
+function isYouTubeUrl(url) {
   return url.includes("youtube.com");
 }
 
