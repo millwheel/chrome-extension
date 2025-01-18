@@ -1,11 +1,10 @@
 const NOTIFICATION_SECONDS = [60, 2 * 60];
+const SPENT_TIME_RECORD = "YouTubeUsageTimeRecord";
 
 const activeYouTubeTabs = new Set();
 let youTubeTrackerTimer = null;
 let spentSecond = null;
 let notificationsSent = new Set();
-
-let spentSecondRecord = null;
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   console.log("tabId=", tabId);
@@ -35,7 +34,6 @@ function addTabIdToActiveYouTubeTabs(tabId) {
     console.log("The Timer already activated so nothing happened.");
   } else {
     const startSecond = loadAccumulatedSpentTimes();
-    spentSecondRecord = null;
     startYouTubeTimer(startSecond);
   }
 }
@@ -68,16 +66,19 @@ function stopYouTubeTimer() {
 }
 
 function loadAccumulatedSpentTimes() {
-  if (spentSecondRecord) {
-    console.log("Load YouTube usage time: ", spentSecondRecord, "seconds");
-    return spentSecondRecord;
-  }
-  return 0;
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.get([SPENT_TIME_RECORD], (result) => {
+      spentSecond = result[SPENT_TIME_RECORD] || 0;
+      console.log("Load YouTube usage time: ", spentSecond, "seconds");
+      resolve(spentSecond);
+    })
+  })
 }
 
 function recordAccumulatedSpentTimes() {
-  spentSecondRecord = spentSecond;
-  console.log("Record YouTube usage time: ", spentSecondRecord, "seconds");
+  chrome.storage.local.set({ [SPENT_TIME_RECORD]: spentSecond }, () => {
+    console.log("Record YouTube usage time: ", spentSecond, "seconds");
+  });
 }
 
 function checkNotificationTimeCondition(spentSecond) {
