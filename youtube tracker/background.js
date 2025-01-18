@@ -1,9 +1,9 @@
-const activeYouTubeTabs = new Set();
-let youTimeTrackerTimer = null;
-let timeSpent = null;
+const NOTIFICATION_SECONDS = [60, 2 * 60];
 
-const TIME_LIMITS = [60 * 1000, 2 * 60 * 1000];
-let notificationsSent = [];
+const activeYouTubeTabs = new Set();
+let youTubeTrackerTimer = null;
+let timeSpent = null;
+let notificationsSent = new Set();
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   console.log("tabId=", tabId);
@@ -12,46 +12,61 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (changeInfo.url.includes("youtube.com")) {
       console.log("You are on youtube.com")
       if (!activeYouTubeTabs.has(tabId)) {
-        console.log("Activated Youtube tab added in management=", tabId);
-        activeYouTubeTabs.add(tabId);
-        startYouTubeTimer();
+        addTabIdToActiveYouTubeTabs(tabId);
       }
     } else if (activeYouTubeTabs.has(tabId)) {
-      activeYouTubeTabs.delete(tabId);
-      console.log("Remained Youtube tab size=", activeYouTubeTabs.size)
-      if (activeYouTubeTabs.size === 0) {
-        console.log("The Timer will be stopped");
-        stopYouTubeTimer();
-      }
+      removeTabIdFromActiveYouTubeTabs(tabId);
     }
   }
 });
 
 chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
   if (activeYouTubeTabs.has(tabId)) {
-    activeYouTubeTabs.delete(tabId);
-    console.log("YouTube tab closed. Remained Youtube tab size=", activeYouTubeTabs.size);
-    if (activeYouTubeTabs.size === 0) {
-      console.log("YouTube tab closed. Stopping the timer.");
-      stopYouTubeTimer();
-    }
+    removeTabIdFromActiveYouTubeTabs(tabId);
   }
 });
 
-function startYouTubeTimer() {
-  if (!youTimeTrackerTimer) {
-    timeSpent = 0;
-    youTimeTrackerTimer = setInterval(() => {
-      timeSpent++;
-      console.log(`${timeSpent} seconds spent on YouTube`);
-    }, 1000);
+function addTabIdToActiveYouTubeTabs(tabId) {
+  activeYouTubeTabs.add(tabId);
+  console.log("Activated Youtube tab added in management=", tabId);
+  if (youTubeTrackerTimer) {
+    console.log("The Timer already activated so nothing happened.");
+  } else {
+    startYouTubeTimer();
   }
 }
+
+function removeTabIdFromActiveYouTubeTabs(tabId) {
+  activeYouTubeTabs.delete(tabId);
+  console.log("YouTube tab closed. Remained Youtube tab size=", activeYouTubeTabs.size);
+  if (activeYouTubeTabs.size === 0) {
+    console.log("There is no more activated Youtube tab. Stopping the timer.");
+    if (youTubeTrackerTimer) {
+      stopYouTubeTimer();
+    }
+  }
+}
+
+function startYouTubeTimer() {
+  timeSpent = 0;
+  youTubeTrackerTimer = setInterval(() => {
+    timeSpent++;
+    console.log(`${timeSpent} seconds spent on YouTube`);
+    checkNotificationTimeCondition()
+  }, 1000);
+}
+
 function stopYouTubeTimer() {
-  if (youTimeTrackerTimer) {
-    clearInterval(youTimeTrackerTimer);
-    youTimeTrackerTimer = null;
-    console.log("Timer stopped.");
+  clearInterval(youTubeTrackerTimer);
+  youTubeTrackerTimer = null;
+  console.log("Timer stopped.");
+}
+
+function checkNotificationTimeCondition() {
+  if (NOTIFICATION_SECONDS.includes(timeSpent) && !notificationsSent.has(timeSpent)) {
+    const minutes = Math.floor(timeSpent / 60);
+    sendNotification(minutes);
+    notificationsSent.add(timeSpent);
   }
 }
 
@@ -59,7 +74,7 @@ function sendNotification(minute) {
   chrome.notifications.create({
     type: "basic",
     iconUrl: "warning.png",
-    title: "YouTube Usage Tracker Warning",
+    title: "YouTube Time Tracker Warning",
     message: `You have spent ${minute} minute${
       minute > 1 ? "s" : ""
     } on YouTube!`,
