@@ -1,7 +1,8 @@
-let timer = null;
+const activeYouTubeTabs = new Set();
+let youTimeTrackerTimer = null;
 let timeSpent = null;
+
 const TIME_LIMITS = [60 * 1000, 2 * 60 * 1000];
-let activeYouTubeTabId = null;
 let notificationsSent = [];
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
@@ -9,40 +10,43 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   console.log("url=", changeInfo.url);
   if (changeInfo.url) {
     if (changeInfo.url.includes("youtube.com")) {
-      console.log("The Timer will be activated");
-      if (activeYouTubeTabId === null) {
-        activeYouTubeTabId = tabId;
+      console.log("You are on youtube.com")
+      if (!activeYouTubeTabs.has(tabId)) {
+        console.log("The Timer will be activated for this tab=", tabId);
+        activeYouTubeTabs.add(tabId);
         startYouTubeTimer();
       }
-    } else if (tabId === activeYouTubeTabId) {
+    } else if (activeYouTubeTabs.has(tabId)) {
       console.log("The Timer will be stopped");
-      stopYouTubeTimer();
-      activeYouTubeTabId = null;
+      activeYouTubeTabs.delete(tabId);
+      if (activeYouTubeTabs.size === 0) {
+        stopYouTubeTimer();
+      }
     }
   }
 });
 
 chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
-  if (tabId === activeYouTubeTabId) {
+  if (activeYouTubeTabs.has(tabId)) {
     console.log("YouTube tab closed. Stopping the timer.");
     stopYouTubeTimer();
-    activeYouTubeTabId = null;
+    activeYouTubeTabs.delete(tabId);
   }
 });
 
 function startYouTubeTimer() {
-  if (!timer) {
+  if (!youTimeTrackerTimer) {
     timeSpent = 0;
-    timer = setInterval(() => {
+    youTimeTrackerTimer = setInterval(() => {
       timeSpent++;
       console.log(`${timeSpent} seconds spent on YouTube`);
     }, 1000);
   }
 }
 function stopYouTubeTimer() {
-  if (timer) {
-    clearInterval(timer);
-    timer = null;
+  if (youTimeTrackerTimer) {
+    clearInterval(youTimeTrackerTimer);
+    youTimeTrackerTimer = null;
     console.log("Timer stopped.");
   }
 }
