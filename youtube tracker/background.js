@@ -12,14 +12,15 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (changeInfo.url.includes("youtube.com")) {
       console.log("You are on youtube.com")
       if (!activeYouTubeTabs.has(tabId)) {
-        console.log("The Timer will be activated for this tab=", tabId);
+        console.log("Activated Youtube tab added in management=", tabId);
         activeYouTubeTabs.add(tabId);
         startYouTubeTimer();
       }
     } else if (activeYouTubeTabs.has(tabId)) {
-      console.log("The Timer will be stopped");
       activeYouTubeTabs.delete(tabId);
+      console.log("Remained Youtube tab size=", activeYouTubeTabs.size)
       if (activeYouTubeTabs.size === 0) {
+        console.log("The Timer will be stopped");
         stopYouTubeTimer();
       }
     }
@@ -28,9 +29,12 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
 chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
   if (activeYouTubeTabs.has(tabId)) {
-    console.log("YouTube tab closed. Stopping the timer.");
-    stopYouTubeTimer();
     activeYouTubeTabs.delete(tabId);
+    console.log("YouTube tab closed. Remained Youtube tab size=", activeYouTubeTabs.size);
+    if (activeYouTubeTabs.size === 0) {
+      console.log("YouTube tab closed. Stopping the timer.");
+      stopYouTubeTimer();
+    }
   }
 });
 
