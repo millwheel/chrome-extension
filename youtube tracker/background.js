@@ -2,10 +2,10 @@ const NOTIFICATION_SECONDS = [60, 2 * 60];
 
 const activeYouTubeTabs = new Set();
 let youTubeTrackerTimer = null;
-let timeSpent = null;
+let spentSecond = null;
 let notificationsSent = new Set();
 
-let timeStore = null;
+let spentSecondRecord = null;
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   console.log("tabId=", tabId);
@@ -34,9 +34,9 @@ function addTabIdToActiveYouTubeTabs(tabId) {
   if (youTubeTrackerTimer) {
     console.log("The Timer already activated so nothing happened.");
   } else {
-    const startTime = timeStore || 0;
-    timeStore = null;
-    startYouTubeTimer(startTime);
+    const startSecond = loadAccumulatedSpentTimes();
+    spentSecondRecord = null;
+    startYouTubeTimer(startSecond);
   }
 }
 
@@ -47,16 +47,17 @@ function removeTabIdFromActiveYouTubeTabs(tabId) {
     console.log("There is no more activated Youtube tab. Stopping the timer.");
     if (youTubeTrackerTimer) {
       stopYouTubeTimer();
+      recordAccumulatedSpentTimes();
     }
   }
 }
 
-function startYouTubeTimer(startTime) {
-  timeSpent = startTime;
+function startYouTubeTimer(startSecond) {
+  spentSecond = startSecond;
   youTubeTrackerTimer = setInterval(() => {
-    timeSpent++;
-    console.log(`${timeSpent} seconds spent on YouTube`);
-    checkNotificationTimeCondition()
+    spentSecond++;
+    console.log(`${spentSecond} seconds spent on YouTube`);
+    checkNotificationTimeCondition(spentSecond)
   }, 1000);
 }
 
@@ -66,11 +67,24 @@ function stopYouTubeTimer() {
   console.log("Timer stopped.");
 }
 
-function checkNotificationTimeCondition() {
-  if (NOTIFICATION_SECONDS.includes(timeSpent) && !notificationsSent.has(timeSpent)) {
-    const minutes = Math.floor(timeSpent / 60);
+function loadAccumulatedSpentTimes() {
+  if (spentSecondRecord) {
+    console.log("Load YouTube usage time: ", spentSecondRecord, "seconds");
+    return spentSecondRecord;
+  }
+  return 0;
+}
+
+function recordAccumulatedSpentTimes() {
+  spentSecondRecord = spentSecond;
+  console.log("Record YouTube usage time: ", spentSecondRecord, "seconds");
+}
+
+function checkNotificationTimeCondition(spentSecond) {
+  if (NOTIFICATION_SECONDS.includes(spentSecond) && !notificationsSent.has(spentSecond)) {
+    const minutes = Math.floor(spentSecond / 60);
     sendNotification(minutes);
-    notificationsSent.add(timeSpent);
+    notificationsSent.add(spentSecond);
   }
 }
 
@@ -78,7 +92,7 @@ function sendNotification(minute) {
   chrome.notifications.create({
     type: "basic",
     iconUrl: "warning.png",
-    title: "YouTube Time Tracker Warning",
+    title: "YouTube Usage Time Tracker Warning",
     message: `You have spent ${minute} minute${
       minute > 1 ? "s" : ""
     } on YouTube!`,

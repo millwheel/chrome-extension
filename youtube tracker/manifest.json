@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "YouTube Visit Tracker",
+  "name": "YouTube Usage Time Tracker",
   "version": "0.1",
   "permissions": ["storage", "tabs", "notifications"],
   "background": {
