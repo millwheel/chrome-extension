@@ -5,6 +5,8 @@ let youTubeTrackerTimer = null;
 let timeSpent = null;
 let notificationsSent = new Set();
 
+let timeStore = null;
+
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   console.log("tabId=", tabId);
   console.log("url=", changeInfo.url);
@@ -32,7 +34,9 @@ function addTabIdToActiveYouTubeTabs(tabId) {
   if (youTubeTrackerTimer) {
     console.log("The Timer already activated so nothing happened.");
   } else {
-    startYouTubeTimer();
+    const startTime = timeStore || 0;
+    timeStore = null;
+    startYouTubeTimer(startTime);
   }
 }
 
@@ -47,8 +51,8 @@ function removeTabIdFromActiveYouTubeTabs(tabId) {
   }
 }
 
-function startYouTubeTimer() {
-  timeSpent = 0;
+function startYouTubeTimer(startTime) {
+  timeSpent = startTime;
   youTubeTrackerTimer = setInterval(() => {
     timeSpent++;
     console.log(`${timeSpent} seconds spent on YouTube`);
