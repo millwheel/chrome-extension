@@ -1,3 +1,6 @@
+import './sw-omnibox.js';
+import './sw-tips.js';
+
 const STORAGE_KEY = "clickCounter";
 let clickCount = 0;
 
