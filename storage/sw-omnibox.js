@@ -1,1 +1,5 @@
-console.log("sw-omnibox.js");
+printOmniBox();
+
+function printOmniBox() {
+    console.log("sw-omnibox.js");
+}

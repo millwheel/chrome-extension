@@ -1,1 +1,5 @@
-console.log("sw-tips.js");
+printTips();
+
+function printTips() {
+    console.log("sw-tips.js");
+}
