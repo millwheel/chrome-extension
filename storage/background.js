@@ -1,5 +1,5 @@
-import './sw-omnibox.js';
-import './sw-tips.js';
+import * as OmniboxModule from './sw-omnibox.js';
+import * as TipsModule from './sw-tips.js';
 
 const STORAGE_KEY = "clickCounter";
 let clickCount = 0;
@@ -26,6 +26,7 @@ async function loadClickCount() {
 chrome.tabs.onActivated.addListener(() => {
   clickCount++;
   console.log("현재 클릭 수:", clickCount);
+  OmniboxModule.yes();
   saveClickCount(); // 클릭할 때마다 저장
 });
 
@@ -40,3 +41,7 @@ chrome.runtime.onInstalled.addListener(async () => {
   await loadClickCount();
   console.log("확장프로그램 설치/업데이트. 이전 클릭 수:", clickCount);
 });
+
+
+OmniboxModule.init();
+TipsModule.init();

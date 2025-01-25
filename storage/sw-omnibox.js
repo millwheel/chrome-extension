@@ -1,5 +1,7 @@
-printOmniBox();
+export function init() {
+    console.log("sw-omnibox.js가 초기화되었습니다!");
+}
 
-function printOmniBox() {
-    console.log("sw-omnibox.js");
+export function yes() {
+    console.log("sw-omnibox.yes");
 }
