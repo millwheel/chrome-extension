@@ -4,9 +4,7 @@
   "version": "0.1",
   "permissions": ["storage", "tabs", "notifications"],
   "background": {
-    "service_worker": "background.js"
-  },
-  "action": {
-    "default_popup": "popup.html"
+    "service_worker": "background.js",
+    "type": "module"
   }
 }

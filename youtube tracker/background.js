@@ -1,10 +1,9 @@
-const NOTIFICATION_SECONDS = [60, 2 * 60];
-const SPENT_TIME_RECORD = "YouTubeUsageTimeRecord";
+import { checkNotificationTimeCondition } from './service/notification.js';
 
+const SPENT_TIME_RECORD = "YouTubeUsageTimeRecord";
 const activeYouTubeTabs = new Set();
 let youTubeTrackerTimer = null;
 let spentSecond = null;
-let notificationsSent = new Set();
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   console.log("tabId=", tabId);
@@ -78,25 +77,5 @@ function loadAccumulatedSpentTimes() {
 function recordAccumulatedSpentTimes() {
   chrome.storage.local.set({ [SPENT_TIME_RECORD]: spentSecond }, () => {
     console.log("Record YouTube usage time: ", spentSecond, "seconds");
-  });
-}
-
-function checkNotificationTimeCondition(spentSecond) {
-  if (NOTIFICATION_SECONDS.includes(spentSecond) && !notificationsSent.has(spentSecond)) {
-    const minutes = Math.floor(spentSecond / 60);
-    sendNotification(minutes);
-    notificationsSent.add(spentSecond);
-  }
-}
-
-function sendNotification(minute) {
-  chrome.notifications.create({
-    type: "basic",
-    iconUrl: "warning.png",
-    title: "YouTube Usage Time Tracker Warning",
-    message: `You have spent ${minute} minute${
-      minute > 1 ? "s" : ""
-    } on YouTube!`,
-    priority: 1,
   });
 }
