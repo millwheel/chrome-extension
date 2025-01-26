@@ -1,7 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "YouTube Usage Time Tracker",
+  "name": "LimitTube",
   "version": "0.1",
+  "description": "Limit your YouTube usage by setting a maximum watch time and stay focused! The timer resets daily.",
   "permissions": ["storage", "tabs", "notifications"],
   "background": {
     "service_worker": "background.js",
