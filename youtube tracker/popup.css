@@ -1,3 +1,23 @@
 body {
-    width: 21rem;
+    width: 20rem;
+    background-color: #f4f4f4;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #d2e1ea;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none;
+}
+
+button:hover {
+    background-color: #8ec0e1;
+}
+
+button:focus {
+    outline: none;
+    box-shadow: none;
 }
