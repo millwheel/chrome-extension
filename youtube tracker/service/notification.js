@@ -1,10 +1,10 @@
-const DEFAULT_NOTIFICATION_SECOND = 60;
-let blockSecond = DEFAULT_NOTIFICATION_SECOND;
+const DEFAULT_MAXIMUM_USAGE_MINUTE = 1;
+let maximumUsageMinute = DEFAULT_MAXIMUM_USAGE_MINUTE;
 
 export function checkNotificationTimeCondition(spentSecond) {
     updateBlockTime();
-    if (spentSecond === blockSecond ) {
-        const minutes = Math.floor(spentSecond / 60);
+    const minutes = Math.floor(spentSecond / 60);
+    if (minutes === maximumUsageMinute) {
         blockYoutube(minutes);
     }
 }
@@ -20,9 +20,9 @@ function blockYoutube(minute) {
 }
 
 function updateBlockTime() {
-    chrome.storage.sync.get("blockTime", (data) => {
-        if (data.blockTime) {
-            blockSecond = data.blockTime;
+    chrome.storage.sync.get("customUsageMinutes", (data) => {
+        if (data.customUsageMinutes) {
+            maximumUsageMinute = data.customUsageMinutes;
         }
     });
 }

@@ -20,27 +20,26 @@ document.getElementById("submit-button").addEventListener("click", (event) => {
     const hoursValue = hoursDropdown.value;
     const minutesValue = minutesDropdown.value;
 
-    if (isNaN(hoursValue) || isNaN(minutesValue)) {
+    if (isNaN(hoursValue) && isNaN(minutesValue)) {
         alert("Please select a valid time for Hours and Minutes.");
         return;
     }
 
-    const hours = parseInt(hoursValue, 10);
-    const minutes = parseInt(minutesValue, 10);
+    const hours = parseInt(hoursValue, 10) || 0;
+    const minutes = parseInt(minutesValue, 10) || 0;
 
     if (hours === 0 && minutes === 0) {
         alert("Please set a time greater than 0.");
         return;
     }
 
-    setNotificationTime(hours, minutes);
-
+    setMaximumUsageTime(hours, minutes);
 });
 
-function setNotificationTime(hours, minutes) {
-    const totalSeconds = hours * 3600 + minutes * 60;
+function setMaximumUsageTime(hours, minutes) {
+    const maximumUsageMinutes = hours * 60 + minutes;
 
-    chrome.storage.sync.set({ blockTime: totalSeconds }, () => {
+    chrome.storage.sync.set({ customUsageMinutes: maximumUsageMinutes }, () => {
         let message = "";
         if (hours === 1) {
             message += `${hours} hour `;
