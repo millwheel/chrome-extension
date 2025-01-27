@@ -3,7 +3,6 @@ let blockSecond = DEFAULT_NOTIFICATION_SECOND;
 
 export function checkNotificationTimeCondition(spentSecond) {
     updateBlockTime();
-    console.log(`blocking seconds: ${blockSecond}`);
     if (spentSecond === blockSecond ) {
         const minutes = Math.floor(spentSecond / 60);
         blockYoutube(minutes);

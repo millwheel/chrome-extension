@@ -3,9 +3,8 @@ import { checkNotificationTimeCondition } from './service/notification.js';
 
 const activeYouTubeTabs = new Set();
 let youTubeTimer = null;
-let spentSecond = null;
+let spentSecond = 0;
 
-// timer
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.url) {
     if (changeInfo.url.includes("youtube.com")) {
@@ -25,11 +24,12 @@ chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
   }
 });
 
+// Tab manager
 function addTabIdToActiveYouTubeTabs(tabId) {
   activeYouTubeTabs.add(tabId);
-  console.log("Activated Youtube tab added in management=", tabId);
+  console.log("Active Youtube tab was added in management=", tabId);
   if (youTubeTimer) {
-    console.log("The Timer already activated so nothing happened.");
+    console.log("The Timer already was activated so nothing happened.");
   } else {
     loadAccumulatedSpentTimes().then((startSecond) => {
       startYouTubeTimer(startSecond);
@@ -39,7 +39,7 @@ function addTabIdToActiveYouTubeTabs(tabId) {
 
 function removeTabIdFromActiveYouTubeTabs(tabId) {
   activeYouTubeTabs.delete(tabId);
-  console.log("YouTube tab closed. Remained Youtube tab size=", activeYouTubeTabs.size);
+  console.log("YouTube tab was closed. Remained Youtube tab size=", activeYouTubeTabs.size);
   if (activeYouTubeTabs.size === 0) {
     console.log("There is no more activated Youtube tab. Stopping the timer.");
     if (youTubeTimer) {
@@ -49,11 +49,11 @@ function removeTabIdFromActiveYouTubeTabs(tabId) {
   }
 }
 
+// Timer
 function startYouTubeTimer(startSecond) {
   spentSecond = startSecond;
   youTubeTimer = setInterval(() => {
     spentSecond++;
-    console.log(`${spentSecond} seconds spent on YouTube`);
     checkNotificationTimeCondition(spentSecond);
   }, 1000);
 }
@@ -64,17 +64,21 @@ function stopYouTubeTimer() {
   console.log("Timer stopped.");
 }
 
-// block reset
+// Blocking reset
 chrome.runtime.onInstalled.addListener(() => {
-  const now = new Date();
-  const nextMidnightDateTime = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
+  // const now = new Date();
+  // const nextMidnightDateTime = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
 
   chrome.alarms.create("demo-default-alarm", {
-    delayInMinutes: 5,
+    delayInMinutes: 2,
   });
 });
 
 chrome.alarms.onAlarm.addListener((alarm) => {
-  console.log("alarm name: ", alarm, "This time: ", new Date());
-
+  if (activeYouTubeTabs.size === 0) {
+    youTubeTimer = null;
+  } else {
+    console.log("Reset the blocking, Reactivate the timer from zero.");
+    startYouTubeTimer(0);
+  }
 });
