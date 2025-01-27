@@ -37,9 +37,9 @@ document.getElementById("submit-button").addEventListener("click", (event) => {
 });
 
 function setMaximumUsageTime(hours, minutes) {
-    const maximumUsageMinutes = hours * 60 + minutes;
+    const maximumUsageSeconds = hours * 3600 + minutes * 60;
 
-    chrome.storage.sync.set({ customUsageMinutes: maximumUsageMinutes }, () => {
+    chrome.storage.sync.set({ customUsageSeconds : maximumUsageSeconds }, () => {
         let message = "";
         if (hours === 1) {
             message += `${hours} hour `;

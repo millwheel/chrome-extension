@@ -1,15 +1,16 @@
-const DEFAULT_MAXIMUM_USAGE_MINUTE = 1;
-let maximumUsageMinute = DEFAULT_MAXIMUM_USAGE_MINUTE;
+const DEFAULT_MAXIMUM_USAGE_SECOND = 60;
 
 export function checkBlockTimeCondition(spentSecond) {
-    updateBlockTime();
-    const minutes = Math.floor(spentSecond / 60);
-    if (minutes === maximumUsageMinute) {
-        blockYoutube(minutes);
+    const maximumUsageSecond = updateBlockTime() || DEFAULT_MAXIMUM_USAGE_SECOND;
+    if (spentSecond === maximumUsageSecond) {
+        const minutes = Math.floor(spentSecond / 60);
+        sendNotification(minutes);
+        blockYoutube();
+        return true;
     }
 }
 
-function blockYoutube(minute) {
+function sendNotification(minute) {
     chrome.notifications.create({
         type: "basic",
         iconUrl: "./static/warning.png",
@@ -17,7 +18,9 @@ function blockYoutube(minute) {
         message: `You have spent ${minute} minute${minute > 1 ? "s" : ""} on YouTube!`,
         priority: 1,
     });
+}
 
+export function blockYoutube() {
     chrome.tabs.query({ url: "*://*.youtube.com/*" }, (tabs) => {
         tabs.forEach((tab) => {
             chrome.scripting.executeScript({
@@ -29,9 +32,11 @@ function blockYoutube(minute) {
 }
 
 function updateBlockTime() {
-    chrome.storage.sync.get("customUsageMinutes", (data) => {
-        if (data.customUsageMinutes) {
-            maximumUsageMinute = data.customUsageMinutes;
+    chrome.storage.sync.get("customUsageSeconds", (data) => {
+        if (data.customUsageSeconds) {
+            return data.customUsageSeconds;
         }
+        return null;
     });
 }
+

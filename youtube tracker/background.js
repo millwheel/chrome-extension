@@ -1,15 +1,17 @@
 import { loadAccumulatedSpentTimes, recordAccumulatedSpentTimes } from './service/storage.js';
-import { checkBlockTimeCondition } from './service/block.js';
+import {blockYoutube, checkBlockTimeCondition} from './service/block.js';
 
 const activeYouTubeTabs = new Set();
 let youTubeTimer = null;
 let spentSecond = 0;
+let blockStatus = false;
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.url) {
     if (changeInfo.url.includes("youtube.com")) {
       console.log("You are on youtube.com");
-      if (!activeYouTubeTabs.has(tabId)) {
+      if (blockStatus) blockYoutube();
+      else if (!activeYouTubeTabs.has(tabId)) {
         addTabIdToActiveYouTubeTabs(tabId);
       }
     } else if (activeYouTubeTabs.has(tabId)) {
@@ -55,7 +57,9 @@ function startYouTubeTimer(startSecond) {
   youTubeTimer = setInterval(() => {
     spentSecond++;
     console.log("spentSecond=", spentSecond);
-    checkBlockTimeCondition(spentSecond);
+    if (checkBlockTimeCondition(spentSecond)) {
+      blockStatus = true;
+    }
   }, 1000);
 }
 
@@ -80,6 +84,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
     youTubeTimer = null;
   } else {
     console.log("Reset the blocking, Reactivate the timer from zero.");
+    blockStatus = false;
     startYouTubeTimer(0);
   }
 });
