@@ -17,6 +17,15 @@ function blockYoutube(minute) {
         message: `You have spent ${minute} minute${minute > 1 ? "s" : ""} on YouTube!`,
         priority: 1,
     });
+
+    chrome.tabs.query({ url: "*://*.youtube.com/*" }, (tabs) => {
+        tabs.forEach((tab) => {
+            chrome.scripting.executeScript({
+                target: { tabId: tab.id },
+                files: ["blockOverlay.js"],
+            });
+        });
+    });
 }
 
 function updateBlockTime() {
