@@ -1,7 +1,10 @@
 const DEFAULT_NOTIFICATION_SECOND = 60;
+let notificationSecond = DEFAULT_NOTIFICATION_SECOND;
 
 export function checkNotificationTimeCondition(spentSecond) {
-    if (spentSecond === DEFAULT_NOTIFICATION_SECOND) {
+    updateNotificationTime();
+    console.log(`notification seconds: ${notificationSecond}`);
+    if (spentSecond === notificationSecond ) {
         const minutes = Math.floor(spentSecond / 60);
         sendNotification(minutes);
     }
@@ -17,3 +20,12 @@ function sendNotification(minute) {
     });
 }
 
+function updateNotificationTime() {
+    chrome.storage.sync.get("notificationTime", (data) => {
+        if (data.notificationTime) {
+            notificationSecond = data.notificationTime;
+        } else {
+            notificationSecond = DEFAULT_NOTIFICATION_SECOND;
+        }
+    });
+}

@@ -14,14 +14,30 @@ populateDropdown("minutes", 0, 50, 10);
 document.getElementById("submit-button").addEventListener("click", (event) => {
     event.preventDefault();
 
-    const hours = parseInt(document.getElementById("hours").value || "0", 10);
-    const minutes = parseInt(document.getElementById("minutes").value || "0", 10);
+    const hoursDropdown = document.getElementById("hours");
+    const minutesDropdown = document.getElementById("minutes");
+
+    const hoursValue = hoursDropdown.value;
+    const minutesValue = minutesDropdown.value;
+
+    if (isNaN(hoursValue) || isNaN(minutesValue)) {
+        alert("Please select a valid time for Hours and Minutes.");
+        return;
+    }
+
+    const hours = parseInt(hoursValue, 10);
+    const minutes = parseInt(minutesValue, 10);
 
     if (hours === 0 && minutes === 0) {
         alert("Please set a time greater than 0.");
         return;
     }
 
+    setNotificationTime(hours, minutes);
+
+});
+
+function setNotificationTime(hours, minutes) {
     const totalSeconds = hours * 3600 + minutes * 60;
 
     chrome.storage.sync.set({ notificationTime: totalSeconds }, () => {
@@ -36,4 +52,4 @@ document.getElementById("submit-button").addEventListener("click", (event) => {
         }
         alert(`Your YouTube usage time is set to ${message}.`);
     });
-});
+}
