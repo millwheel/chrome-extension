@@ -1,11 +1,9 @@
-const NOTIFICATION_SECONDS = [60, 2 * 60];
-let notificationsSent = new Set();
+const DEFAULT_NOTIFICATION_SECOND = 60;
 
 export function checkNotificationTimeCondition(spentSecond) {
-    if (NOTIFICATION_SECONDS.includes(spentSecond) && !notificationsSent.has(spentSecond)) {
+    if (spentSecond === DEFAULT_NOTIFICATION_SECOND) {
         const minutes = Math.floor(spentSecond / 60);
         sendNotification(minutes);
-        notificationsSent.add(spentSecond);
     }
 }
 
@@ -18,3 +16,4 @@ function sendNotification(minute) {
         priority: 1,
     });
 }
+
