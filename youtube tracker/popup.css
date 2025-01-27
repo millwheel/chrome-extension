@@ -5,7 +5,11 @@ body {
     color: #333;
 }
 
-form {
+.header-container {
+    text-align: center;
+}
+
+form.select-box {
     display: flex;
     justify-content: space-between;
     gap: 10px;
@@ -18,7 +22,7 @@ form {
 select, button {
     flex: 1;
     padding: 5px;
-    font-size: 16px;
+    font-size: 15px;
     border: 1px solid #ddd;
     border-radius: 4px;
 }
@@ -27,7 +31,6 @@ button {
     padding: 10px;
     background-color: #8ec0e1;
     color: white;
-    font-size: 16px;
     border: none;
     cursor: pointer;
     transition: background-color 0.3s;
