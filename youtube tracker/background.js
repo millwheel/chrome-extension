@@ -1,5 +1,5 @@
 import { loadAccumulatedSpentTimes, recordAccumulatedSpentTimes } from './service/storage.js';
-import { checkNotificationTimeCondition } from './service/notification.js';
+import { checkBlockTimeCondition } from './service/block.js';
 
 const activeYouTubeTabs = new Set();
 let youTubeTimer = null;
@@ -54,7 +54,7 @@ function startYouTubeTimer(startSecond) {
   spentSecond = startSecond;
   youTubeTimer = setInterval(() => {
     spentSecond++;
-    checkNotificationTimeCondition(spentSecond);
+    checkBlockTimeCondition(spentSecond);
   }, 1000);
 }
 

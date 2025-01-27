@@ -3,7 +3,7 @@
   "name": "LimitTube",
   "version": "0.1",
   "description": "Limit your YouTube usage by setting a maximum watch time and stay focused!",
-  "permissions": ["storage", "tabs", "notifications", "alarms"],
+  "permissions": ["storage", "tabs", "notifications", "alarms", "scripting"],
   "background": {
     "service_worker": "background.js",
     "type": "module"
@@ -16,5 +16,4 @@
     "48": "icons/icon.png",
     "128": "icons/icon.png"
   }
-
 }
