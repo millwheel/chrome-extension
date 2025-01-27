@@ -54,6 +54,7 @@ function startYouTubeTimer(startSecond) {
   spentSecond = startSecond;
   youTubeTimer = setInterval(() => {
     spentSecond++;
+    console.log("spentSecond=", spentSecond);
     checkBlockTimeCondition(spentSecond);
   }, 1000);
 }

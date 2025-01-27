@@ -9,8 +9,8 @@
     blocker.style.height = "100%";
     blocker.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
     blocker.style.zIndex = "9999";
-    blocker.style.color = "black";
-    blocker.style.fontSize = "24px";
+    blocker.style.color = "white";
+    blocker.style.fontSize = "30px";
     blocker.style.display = "flex";
     blocker.style.justifyContent = "center";
     blocker.style.alignItems = "center";

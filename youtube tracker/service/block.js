@@ -22,7 +22,7 @@ function blockYoutube(minute) {
         tabs.forEach((tab) => {
             chrome.scripting.executeScript({
                 target: { tabId: tab.id },
-                files: ["blockOverlay.js"],
+                files: ["manipulation/blockOverlay.js"],
             });
         });
     });

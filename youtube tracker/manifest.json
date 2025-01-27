@@ -4,6 +4,7 @@
   "version": "0.1",
   "description": "Limit your YouTube usage by setting a maximum watch time and stay focused!",
   "permissions": ["storage", "tabs", "notifications", "alarms", "scripting"],
+  "host_permissions": ["*://*.youtube.com/*"],
   "background": {
     "service_worker": "background.js",
     "type": "module"
