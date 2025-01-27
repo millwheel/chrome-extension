@@ -10,7 +10,7 @@ export function checkNotificationTimeCondition(spentSecond) {
 function sendNotification(minute) {
     chrome.notifications.create({
         type: "basic",
-        iconUrl: "warning.png",
+        iconUrl: "./static/warning.png",
         title: "YouTube Usage Time Tracker Warning",
         message: `You have spent ${minute} minute${minute > 1 ? "s" : ""} on YouTube!`,
         priority: 1,

@@ -6,7 +6,29 @@ body {
 }
 
 .header-container {
+    margin-top: 20px;
     text-align: center;
+}
+
+.header-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.header-title-icon {
+    width: 40px;
+    height: 40px;
+}
+
+.header-title-name {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.header-description {
+    font-size: 14px;
 }
 
 form.select-box {
@@ -29,7 +51,7 @@ select, button {
 
 button {
     padding: 10px;
-    background-color: #8ec0e1;
+    background-color: #e1a18e;
     color: white;
     border: none;
     cursor: pointer;
@@ -37,7 +59,7 @@ button {
 }
 
 button:hover {
-    background-color: #63b2e6;
+    background-color: #e45f38;
 }
 
 label {
