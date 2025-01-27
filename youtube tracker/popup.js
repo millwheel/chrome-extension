@@ -8,7 +8,7 @@ function populateDropdown(id, start, end, step = 1) {
     }
 }
 
-populateDropdown("hours", 0, 3);
+populateDropdown("hours", 0, 4);
 populateDropdown("minutes", 0, 50, 10);
 
 document.getElementById("submit-button").addEventListener("click", (event) => {
@@ -40,7 +40,7 @@ document.getElementById("submit-button").addEventListener("click", (event) => {
 function setNotificationTime(hours, minutes) {
     const totalSeconds = hours * 3600 + minutes * 60;
 
-    chrome.storage.sync.set({ notificationTime: totalSeconds }, () => {
+    chrome.storage.sync.set({ blockTime: totalSeconds }, () => {
         let message = "";
         if (hours === 1) {
             message += `${hours} hour `;

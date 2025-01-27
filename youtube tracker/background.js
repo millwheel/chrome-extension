@@ -26,6 +26,19 @@ chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
   }
 });
 
+chrome.runtime.onInstalled.addListener(() => {
+  const now = new Date();
+  const nextMidnightDateTime = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
+
+  chrome.alarms.create("demo-default-alarm", {
+    delayInMinutes: 5,
+  });
+});
+
+chrome.alarms.onAlarm.addListener((alarm) => {
+  console.log("alarm name: ", alarm, "This time: ", new Date());
+});
+
 function addTabIdToActiveYouTubeTabs(tabId) {
   activeYouTubeTabs.add(tabId);
   console.log("Activated Youtube tab added in management=", tabId);

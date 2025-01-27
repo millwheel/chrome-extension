@@ -1,16 +1,16 @@
 const DEFAULT_NOTIFICATION_SECOND = 60;
-let notificationSecond = DEFAULT_NOTIFICATION_SECOND;
+let blockSecond = DEFAULT_NOTIFICATION_SECOND;
 
 export function checkNotificationTimeCondition(spentSecond) {
-    updateNotificationTime();
-    console.log(`notification seconds: ${notificationSecond}`);
-    if (spentSecond === notificationSecond ) {
+    updateBlockTime();
+    console.log(`blocking seconds: ${blockSecond}`);
+    if (spentSecond === blockSecond ) {
         const minutes = Math.floor(spentSecond / 60);
-        sendNotification(minutes);
+        blockYoutube(minutes);
     }
 }
 
-function sendNotification(minute) {
+function blockYoutube(minute) {
     chrome.notifications.create({
         type: "basic",
         iconUrl: "./static/warning.png",
@@ -20,12 +20,10 @@ function sendNotification(minute) {
     });
 }
 
-function updateNotificationTime() {
-    chrome.storage.sync.get("notificationTime", (data) => {
-        if (data.notificationTime) {
-            notificationSecond = data.notificationTime;
-        } else {
-            notificationSecond = DEFAULT_NOTIFICATION_SECOND;
+function updateBlockTime() {
+    chrome.storage.sync.get("blockTime", (data) => {
+        if (data.blockTime) {
+            blockSecond = data.blockTime;
         }
     });
 }
