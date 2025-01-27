@@ -1,7 +1,7 @@
 (function () {
     const blocker = document.createElement("div");
     blocker.id = "youtube-usage-blocker";
-    blocker.innerText = "You have reached maximum YouTube usage time";
+    blocker.innerText = "You have reached your maximum YouTube usage time";
     blocker.style.position = "fixed";
     blocker.style.top = 0;
     blocker.style.left = 0;

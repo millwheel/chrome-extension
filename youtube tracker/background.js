@@ -80,9 +80,8 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 chrome.alarms.onAlarm.addListener((alarm) => {
-  if (activeYouTubeTabs.size === 0) {
-    youTubeTimer = null;
-  } else {
+  startYouTubeTimer();
+  if (activeYouTubeTabs.size !== 0) {
     console.log("Reset the blocking, Reactivate the timer from zero.");
     blockStatus = false;
     startYouTubeTimer(0);
