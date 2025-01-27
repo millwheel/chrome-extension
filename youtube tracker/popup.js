@@ -17,10 +17,23 @@ document.getElementById("submit-button").addEventListener("click", (event) => {
     const hours = parseInt(document.getElementById("hours").value || "0", 10);
     const minutes = parseInt(document.getElementById("minutes").value || "0", 10);
 
+    if (hours === 0 && minutes === 0) {
+        alert("Please set a time greater than 0.");
+        return;
+    }
+
     const totalSeconds = hours * 3600 + minutes * 60;
 
     chrome.storage.sync.set({ notificationTime: totalSeconds }, () => {
-        console.log(`Notification time set to ${hours} hours and ${minutes} minutes (${totalSeconds} seconds).`);
-        alert("Notification time updated!");
+        let message = "";
+        if (hours === 1) {
+            message += `${hours} hour `;
+        } else if (hours >= 2) {
+            message += `${hours} hours `;
+        }
+        if (minutes > 0) {
+            message += `${minutes} minutes`;
+        }
+        alert(`Your YouTube usage time is set to ${message}.`);
     });
 });
