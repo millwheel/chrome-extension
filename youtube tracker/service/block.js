@@ -1,4 +1,4 @@
-const DEFAULT_MAXIMUM_USAGE_SECOND = 60;
+const DEFAULT_MAXIMUM_USAGE_SECOND = 30 * 60;
 
 export function checkBlockTimeCondition(spentSecond) {
     const maximumUsageSecond = updateBlockTime() || DEFAULT_MAXIMUM_USAGE_SECOND;

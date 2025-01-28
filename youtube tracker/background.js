@@ -71,20 +71,20 @@ function stopYouTubeTimer() {
 
 // Blocking reset
 chrome.runtime.onInstalled.addListener(() => {
-  // const now = new Date();
-  // const nextMidnightDateTime = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
+  const now = new Date();
+  const nextMidnightDateTime = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
 
   chrome.alarms.create("demo-default-alarm", {
-    delayInMinutes: 2,
+    when: nextMidnightDateTime,
   });
 });
 
 chrome.alarms.onAlarm.addListener((alarm) => {
   stopYouTubeTimer();
   blockStatus = false;
-  console.log("Reset the blocking.");
+  console.log("Reset the blocking status.");
   if (activeYouTubeTabs.size !== 0) {
-    console.log("Reactivate the timer from zero.");
+    console.log("Reactivate the timer.");
     startYouTubeTimer(0);
   }
 });
