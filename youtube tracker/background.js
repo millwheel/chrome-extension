@@ -9,8 +9,6 @@ let spentSecond = 0;
 let blockStatus = false;
 let maximumUsageSecond = DEFAULT_MAXIMUM_USAGE_SECOND;
 
-console.log("maximumUsageSecond=", maximumUsageSecond);
-
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.url) {
     if (changeInfo.url.includes("youtube.com")) {
