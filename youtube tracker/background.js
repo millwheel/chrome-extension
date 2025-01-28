@@ -1,7 +1,8 @@
 import { loadAccumulatedSpentTimes, recordAccumulatedSpentTimes } from './service/storage.js';
-import {blockYoutube, checkBlockTimeCondition} from './service/block.js';
+import {blockYoutube, checkBlockTimeCondition, checkNotificationCondition} from './service/block.js';
 
 const DEFAULT_MAXIMUM_USAGE_SECOND = 60;
+const DEFAULT_NOTIFICATION_SECOND_BEFORE = 5 * 60;
 const activeYouTubeTabs = new Set();
 let youTubeTimer = null;
 let spentSecond = 0;
@@ -61,6 +62,7 @@ function startYouTubeTimer(startSecond) {
   youTubeTimer = setInterval(() => {
     spentSecond++;
     console.log("spentSecond=", spentSecond);
+    checkNotificationCondition(spentSecond, maximumUsageSecond - DEFAULT_NOTIFICATION_SECOND_BEFORE);
     if (checkBlockTimeCondition(spentSecond, maximumUsageSecond)) {
       blockStatus = true;
     }
@@ -99,7 +101,7 @@ function getNextMidnightTime() {
   return nextMidnight.getTime();
 }
 
-// update Maximum YouTube Usage Time
+// Maximum YouTube Usage Time Update
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "updateMaximumUsageSecond") {
     maximumUsageSecond = message.value;
