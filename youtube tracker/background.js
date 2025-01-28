@@ -1,8 +1,8 @@
 import { loadAccumulatedSpentTimes, recordAccumulatedSpentTimes } from './service/storage.js';
-import {blockYoutube, checkBlockTimeCondition, checkNotificationCondition} from './service/block.js';
+import { blockYoutube, checkBlockTimeCondition } from './service/block.js';
+import { checkNotificationCondition } from "./service/notification.js";
 
 const DEFAULT_MAXIMUM_USAGE_SECOND = 60;
-const DEFAULT_NOTIFICATION_SECOND_BEFORE = 5 * 60;
 const activeYouTubeTabs = new Set();
 let youTubeTimer = null;
 let spentSecond = 0;
@@ -62,7 +62,8 @@ function startYouTubeTimer(startSecond) {
   youTubeTimer = setInterval(() => {
     spentSecond++;
     console.log("spentSecond=", spentSecond);
-    checkNotificationCondition(spentSecond, maximumUsageSecond - DEFAULT_NOTIFICATION_SECOND_BEFORE);
+    logTest();
+    checkNotificationCondition(spentSecond, maximumUsageSecond);
     if (checkBlockTimeCondition(spentSecond, maximumUsageSecond)) {
       blockStatus = true;
     }
