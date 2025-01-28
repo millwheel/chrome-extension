@@ -1,5 +1,6 @@
 import { loadAccumulatedSpentTimes, recordAccumulatedSpentTimes } from './service/storage.js';
 import {blockYoutube, checkBlockTimeCondition} from './service/block.js';
+import {scheduleDailyAlarm} from "./service/scheduler";
 
 const activeYouTubeTabs = new Set();
 let youTubeTimer = null;
@@ -71,12 +72,7 @@ function stopYouTubeTimer() {
 
 // Blocking reset
 chrome.runtime.onInstalled.addListener(() => {
-  const now = new Date();
-  const nextMidnightDateTime = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
-
-  chrome.alarms.create("reset-block-timer", {
-    when: nextMidnightDateTime.getTime(),
-  });
+  scheduleDailyAlarm();
 });
 
 chrome.alarms.onAlarm.addListener((alarm) => {
