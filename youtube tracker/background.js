@@ -74,17 +74,19 @@ chrome.runtime.onInstalled.addListener(() => {
   const now = new Date();
   const nextMidnightDateTime = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
 
-  chrome.alarms.create("demo-default-alarm", {
-    when: nextMidnightDateTime,
+  chrome.alarms.create("reset-block-timer", {
+    when: nextMidnightDateTime.getTime(),
   });
 });
 
 chrome.alarms.onAlarm.addListener((alarm) => {
-  stopYouTubeTimer();
-  blockStatus = false;
-  console.log("Reset the blocking status.");
-  if (activeYouTubeTabs.size !== 0) {
-    console.log("Reactivate the timer.");
-    startYouTubeTimer(0);
+  if (alarm.name === "reset-block-timer") {
+    stopYouTubeTimer();
+    blockStatus = false;
+    console.log("Reset the blocking status.");
+    if (activeYouTubeTabs.size !== 0) {
+      console.log("Reactivate the timer.");
+      startYouTubeTimer(0);
+    }
   }
 });
