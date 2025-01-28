@@ -6,12 +6,9 @@ import {
   stopYouTubeTimer
 } from './service/timer.js';
 import { appState } from "./state.js";
+import {getNextMidnightTime} from "./service/midnight.js";
 
-// const DEFAULT_MAXIMUM_USAGE_SECOND = 60;
-// let maximumUsageSecond = DEFAULT_MAXIMUM_USAGE_SECOND;
-// const activeYouTubeTabs = new Set();
-// let blockStatus = false;
-
+// Tab action tracker
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.url) {
     if (changeInfo.url.includes("youtube.com")) {
@@ -51,12 +48,6 @@ chrome.alarms.onAlarm.addListener((alarm) => {
     }
   }
 });
-
-function getNextMidnightTime() {
-  const now = new Date();
-  const nextMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
-  return nextMidnight.getTime();
-}
 
 // Maximum YouTube Usage Time Update
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
