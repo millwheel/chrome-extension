@@ -1,7 +1,4 @@
-const DEFAULT_MAXIMUM_USAGE_SECOND = 30 * 60;
-
-export function checkBlockTimeCondition(spentSecond) {
-    const maximumUsageSecond = updateBlockTime() || DEFAULT_MAXIMUM_USAGE_SECOND;
+export function checkBlockTimeCondition(spentSecond, maximumUsageSecond) {
     if (spentSecond === maximumUsageSecond) {
         const minutes = Math.floor(spentSecond / 60);
         sendNotification(minutes);

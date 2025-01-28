@@ -50,5 +50,7 @@ function setMaximumUsageTime(hours, minutes) {
             message += `${minutes} minutes`;
         }
         alert(`Your YouTube usage time is set to ${message}.`);
+
+        chrome.runtime.sendMessage({ action: "updateMaximumUsageSecond", value: maximumUsageSeconds });
     });
 }

@@ -1,10 +1,14 @@
 import { loadAccumulatedSpentTimes, recordAccumulatedSpentTimes } from './service/storage.js';
 import {blockYoutube, checkBlockTimeCondition} from './service/block.js';
 
+const DEFAULT_MAXIMUM_USAGE_SECOND = 60;
 const activeYouTubeTabs = new Set();
 let youTubeTimer = null;
 let spentSecond = 0;
 let blockStatus = false;
+let maximumUsageSecond = DEFAULT_MAXIMUM_USAGE_SECOND;
+
+console.log("maximumUsageSecond=", maximumUsageSecond);
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.url) {
@@ -57,7 +61,7 @@ function startYouTubeTimer(startSecond) {
   youTubeTimer = setInterval(() => {
     spentSecond++;
     console.log("spentSecond=", spentSecond);
-    if (checkBlockTimeCondition(spentSecond)) {
+    if (checkBlockTimeCondition(spentSecond, maximumUsageSecond)) {
       blockStatus = true;
     }
   }, 1000);
@@ -95,3 +99,10 @@ function getNextMidnightTime() {
   return nextMidnight.getTime();
 }
 
+// update Maximum YouTube Usage Time
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "updateMaximumUsageSecond") {
+    maximumUsageSecond = message.value;
+    console.log("Updated maximumUsageSecond =", maximumUsageSecond);
+  }
+});
