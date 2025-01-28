@@ -28,12 +28,3 @@ export function blockYoutube() {
     });
 }
 
-function updateBlockTime() {
-    chrome.storage.sync.get("customUsageSeconds", (data) => {
-        if (data.customUsageSeconds) {
-            return data.customUsageSeconds;
-        }
-        return null;
-    });
-}
-

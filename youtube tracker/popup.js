@@ -39,18 +39,16 @@ document.getElementById("submit-button").addEventListener("click", (event) => {
 function setMaximumUsageTime(hours, minutes) {
     const maximumUsageSeconds = hours * 3600 + minutes * 60;
 
-    chrome.storage.sync.set({ customUsageSeconds : maximumUsageSeconds }, () => {
-        let message = "";
-        if (hours === 1) {
-            message += `${hours} hour `;
-        } else if (hours >= 2) {
-            message += `${hours} hours `;
-        }
-        if (minutes > 0) {
-            message += `${minutes} minutes`;
-        }
-        alert(`Your YouTube usage time is set to ${message}.`);
+    let message = "";
+    if (hours === 1) {
+        message += `${hours} hour `;
+    } else if (hours >= 2) {
+        message += `${hours} hours `;
+    }
+    if (minutes > 0) {
+        message += `${minutes} minutes`;
+    }
+    chrome.runtime.sendMessage({ action: "updateMaximumUsageSecond", value: maximumUsageSeconds });
 
-        chrome.runtime.sendMessage({ action: "updateMaximumUsageSecond", value: maximumUsageSeconds });
-    });
+    alert(`Your YouTube usage time is set to ${message}.`);
 }
