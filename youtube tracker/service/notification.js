@@ -1,6 +1,5 @@
 const DEFAULT_NOTIFICATION_SECOND_BEFORE = 5 * 60;
 
-
 export function checkNotificationCondition(spentSecond, maximumUsageSecond) {
     if (spentSecond === maximumUsageSecond - DEFAULT_NOTIFICATION_SECOND_BEFORE) {
         const minutes = Math.floor(spentSecond / 60);
